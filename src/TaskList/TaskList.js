@@ -2,15 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Task from '../Task/Task';
 
-function TaskList({data}) {
+export default function TaskList({data}) {
     let tasks = [];
     for(let i in data) {
         tasks.push(<li><Task value={data[i]}/></li>);
     }
+    console.log(tasks)
     return (
         <section>
-            <ul className='taskList'>
-                {tasks};
+            <ul className='todo-list'>
+                {tasks}
             </ul>
         </section>
     );

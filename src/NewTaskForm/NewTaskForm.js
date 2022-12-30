@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 
-function NewTaskForm() {
+export function NewTaskForm() {
     return (
-       <l/>
+       <input type='text' className='new-todo' placeholder='What needs to be done?' autoFocus></input>
     );
 }
