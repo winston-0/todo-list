@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function Task({value}) {
+export default function Task({value}) {
     return (
         <div className='view'>
             <input className='toggle' type="checkbox"/>
