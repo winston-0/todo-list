@@ -2,18 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Task from '../Task/Task';
 
-export default function TaskList({data}) {
-    let tasks = [];
-    for(let i in data) {
-        tasks.push(<li><Task value={data[i]}/></li>);
-    }
-    console.log(tasks)
+export default function TaskList({data, deleteTask}) {
+    let tasks = data.map((el) => {
+        return <Task key={el.id} value={el.value} id={el.id} deleteTask={deleteTask}/>
+    })
     return (
-        <section>
             <ul className='todo-list'>
                 {tasks}
             </ul>
-        </section>
     );
 }
 
