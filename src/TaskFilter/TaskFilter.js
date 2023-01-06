@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export default function TaskFilter() {
+export default function TaskFilter({onFilter}) {
     return (
         <ul className='filters'>
             <li>
-                <button className='selected'>All</button>
+                <button onClick={()=>onFilter('all')} className='selected'>All</button>
             </li>
             <li>
-                <button>Active</button>
+                <button onClick={()=>onFilter('active')}>Active</button>
             </li>
             <li>
-                <button>Completed</button>
+                <button onClick={()=>onFilter('completed')}>Completed</button>
             </li>
         </ul>
     )

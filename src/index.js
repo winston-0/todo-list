@@ -14,9 +14,10 @@ class TodoApp extends Component {
             this.createTask('finish education'),
             this.createTask('drink some coffe'),
             this.createTask('go pee'),
-        ]   
+        ],
+        filter: 'all'
     }
-    
+
     createTask(value) {
         return {
             id: this.maxID += 1,
@@ -59,15 +60,41 @@ class TodoApp extends Component {
             }
         })
     }
-
-    render() {
+    FilterStatus = (status) => {
+        const {filter} = this.state;
+        if(status === 'all') {
+            this.setState({
+                filter: 'all'
+            })
+        } else if(status === 'completed') {
+            this.setState({
+                filter: 'completed'
+            }) 
+        } else if(status === 'active') {
+            this.setState({
+                filter: 'active'
+            })
+        }
+    }
+    filterTask = (condition) => {
         const {data} = this.state;
+        if(condition === 'all') {
+            return  [...data];
+        } else if(condition === 'completed') {
+            return  data.filter(el => el.isDone === true);
+        } else if(condition === 'active') {
+            return  data.filter(el => el.isDone === false);
+        }
+    }
+    render() {
+        const {data, filter} = this.state;
+        let visisbleElements = this.filterTask(filter);
         return (
             <section className='todoapp'>
                 <Header onAddTask={this.addTask}/>
                 <section className='main'>
-                    <TaskList data={data} onDeleteTask={this.deleteTask} onMarkDoneTask={this.markDoneTask}/>
-                    <Footer remainingTasks={this.remainingTasks}/>
+                    <TaskList data={visisbleElements} onDeleteTask={this.deleteTask} onMarkDoneTask={this.markDoneTask}/>
+                    <Footer onFilter={this.FilterStatus} remainingTasks={this.remainingTasks}/>
                 </section>
             </section>
         )
