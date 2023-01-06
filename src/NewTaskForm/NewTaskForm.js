@@ -1,9 +1,26 @@
-import React from 'react';
+import {React, Component} from 'react';
 import ReactDOM from 'react-dom';
 
 
-export function NewTaskForm() {
-    return (
-       <input type='text' className='new-todo' placeholder='What needs to be done?' autoFocus></input>
-    );
+export class NewTaskForm extends Component{
+    state = {
+        value: ''
+    }
+    changeValue = (e) => {
+        this.setState({
+            value: e.target.value
+        })
+    }
+    render() {
+        const {value} = this.state
+        const {onAddTask} = this.props
+        return (
+            <form onSubmit={(e) => {
+                e.preventDefault()
+                onAddTask(value)}
+            }>
+                <input value={value} onChange={this.changeValue} type='text' className='new-todo' placeholder='What needs to be done?' autoFocus></input>
+            </form>
+         );
+    }
 }

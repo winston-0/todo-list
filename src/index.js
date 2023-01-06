@@ -50,12 +50,21 @@ class TodoApp extends Component {
         const completedTasks = data.filter(el => el.isDone).length;
         return data.length - completedTasks;
     }
+    addTask = (value) => {
+        let newTask = this.createTask(value);
+        this.setState(({data}) => {
+            const newData = [newTask, ...data.slice(0)];
+            return {
+                data: newData
+            }
+        })
+    }
 
     render() {
         const {data} = this.state;
         return (
             <section className='todoapp'>
-                <Header/>
+                <Header onAddTask={this.addTask}/>
                 <section className='main'>
                     <TaskList data={data} onDeleteTask={this.deleteTask} onMarkDoneTask={this.markDoneTask}/>
                     <Footer remainingTasks={this.remainingTasks}/>
