@@ -22,12 +22,12 @@ export default class TaskFilter extends Component {
     const buttons = this.filterbuttons.map((el) => {
         const { label} = el;
         return <li key={Math.random() + 1}>
-            <button
-                className={activeButton === label ? 'selected' : null}
-                onClick={(e) => {onFilter(label); this.changeButton(e)}}
-                type='button'>
-            {label}</button>
-        </li>
+                    <button
+                        className={activeButton === label ? 'selected' : null}
+                        onClick={(e) => {onFilter(label); this.changeButton(e)}}
+                        type='button'>
+                    {label}</button>
+                </li>
     })
       return (
         <ul className='filters'>

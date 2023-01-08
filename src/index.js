@@ -86,6 +86,13 @@ class TodoApp extends Component {
             return  data.filter(el => el.isDone === false);
         }
     }
+    clearAllCompleted = () => {
+        const {data} = this.state;
+        const newArr = data.filter(el => !el.isDone);
+        this.setState({
+            data: newArr
+        })
+    }
     render() {
         const {data, filter} = this.state;
         let visisbleElements = this.filterTask(filter);
@@ -94,7 +101,7 @@ class TodoApp extends Component {
                 <Header onAddTask={this.addTask}/>
                 <section className='main'>
                     <TaskList data={visisbleElements} onDeleteTask={this.deleteTask} onMarkDoneTask={this.markDoneTask}/>
-                    <Footer onFilter={this.FilterStatus} remainingTasks={this.remainingTasks}/>
+                    <Footer deleteCompleted={this.clearAllCompleted} onFilter={this.FilterStatus} remainingTasks={this.remainingTasks}/>
                 </section>
             </section>
         )
