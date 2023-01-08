@@ -9,13 +9,17 @@ import './index.css'
 
 class TodoApp extends Component {
     maxID = 0;
-    state = {
+    state = JSON.parse(window.localStorage.getItem('state')) || {
         data: [
             this.createTask('finish education'),
             this.createTask('drink some coffe'),
             this.createTask('go pee'),
         ],
         filter: 'all'
+    }
+
+    componentDidUpdate() {
+        window.localStorage.setItem('state', JSON.stringify(this.state));
     }
 
     createTask(value) {
