@@ -17,7 +17,10 @@ export class NewTaskForm extends Component{
         return (
             <form onSubmit={(e) => {
                 e.preventDefault()
-                onAddTask(value)}
+                onAddTask(value)
+                this.setState({
+                    value: ''
+                })}
             }>
                 <input value={value} onChange={this.changeValue} type='text' className='new-todo' placeholder='What needs to be done?' autoFocus></input>
             </form>
