@@ -6,9 +6,7 @@ import Footer from './Footer/Footer';
 import './index.css'
 
 
-
 class TodoApp extends Component {
-    maxID = 0;
     state = JSON.parse(window.localStorage.getItem('state')) || {
         data: [
             this.createTask('finish education'),
@@ -18,16 +16,18 @@ class TodoApp extends Component {
         filter: 'all'
     }
 
+
     componentDidUpdate() {
         window.localStorage.setItem('state', JSON.stringify(this.state));
     }
 
     createTask(value) {
         return {
-            id: this.maxID += 1,
+            id: Math.random() + 10,
             value,
             isImportant: false,
             isDone: false,
+            whenCreated: new Date().toISOString()
         }
     }
     deleteTask = (id) => {
@@ -40,6 +40,16 @@ class TodoApp extends Component {
             }
         })
     }
+    editTask = (value, id) => {
+        const {data} = this.state;
+        const indexOfItem = data.findIndex(el => el.id === id);
+        const newItem = {...data[indexOfItem], value: value};
+        const newData = [...data.slice(0, indexOfItem), newItem, ...data.slice(indexOfItem + 1)];
+        this.setState({
+            data: newData
+        })
+    }
+
     markDoneTask = (id) => {
         this.setState(({data}) => {
             const indexOfItem = data.findIndex(el => el.id === id);
@@ -104,7 +114,7 @@ class TodoApp extends Component {
             <section className='todoapp'>
                 <Header onAddTask={this.addTask}/>
                 <section className='main'>
-                    <TaskList data={visisbleElements} onDeleteTask={this.deleteTask} onMarkDoneTask={this.markDoneTask}/>
+                    <TaskList onEdit={this.editTask} data={visisbleElements} onDeleteTask={this.deleteTask} onMarkDoneTask={this.markDoneTask}/>
                     <Footer deleteCompleted={this.clearAllCompleted} onFilter={this.FilterStatus} remainingTasks={this.remainingTasks}/>
                 </section>
             </section>
