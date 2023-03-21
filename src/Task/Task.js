@@ -2,6 +2,9 @@ import { React, Component } from 'react'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import { parseISO } from 'date-fns'
 
+import EditTaskField from '../EditTaskField/EditTaskField'
+import Timer from '../Timer/Timer'
+
 export default class Task extends Component {
   state = {
     checkboxStatus: false,
@@ -31,7 +34,7 @@ export default class Task extends Component {
   }
 
   render() {
-    const { value, isDone, onDeleteTask, onMarkDoneTask, whenCreated, onEdit, id } = this.props
+    const { value, isDone, onDeleteTask, onMarkDoneTask, whenCreated, onEdit, id, min, sec } = this.props
     const { checkboxStatus, editing, editingValue } = this.state
     return (
       <li className={isDone ? 'completed' : null || editing ? 'editing' : null}>
@@ -44,23 +47,22 @@ export default class Task extends Component {
             onClick={onMarkDoneTask}
           />
           <label>
-            <span className="description">{value}</span>
-            <span className="created">{formatDistanceToNow(parseISO(whenCreated))} ago</span>
+            <span className="title">{value}</span>
+            <Timer min={min} sec={sec} />
+            <span className="description">{formatDistanceToNow(parseISO(whenCreated))} ago</span>
           </label>
           <button onClick={this.editTask} className="icon icon-edit"></button>
           <button className="icon icon-destroy" onClick={onDeleteTask}></button>
         </div>
 
         {editing === true ? (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              onEdit(editingValue, id)
-              this.editTask()
-            }}
-          >
-            <input onChange={(e) => this.changeInputValue(e)} value={editingValue} type="text" className="edit"></input>
-          </form>
+          <EditTaskField
+            editingValue={editingValue}
+            onEdit={onEdit}
+            id={id}
+            editTask={this.editTask}
+            changeInputValue={this.changeInputValue}
+          />
         ) : null}
       </li>
     )

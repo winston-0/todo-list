@@ -16,13 +16,15 @@ class TodoApp extends Component {
     window.localStorage.setItem('state', JSON.stringify(this.state))
   }
 
-  createTask(value) {
+  createTask(value, min, sec) {
     return {
       id: Math.random() + 10,
       value,
       isImportant: false,
       isDone: false,
       whenCreated: new Date().toISOString(),
+      min,
+      sec,
     }
   }
   deleteTask = (id) => {
@@ -63,8 +65,14 @@ class TodoApp extends Component {
     const completedTasks = data.filter((el) => el.isDone).length
     return data.length - completedTasks
   }
-  addTask = (value) => {
-    let newTask = this.createTask(value)
+  addTask = ({ value, min, sec }) => {
+    if (min === '') {
+      min = '0' + min
+    }
+    if (sec === '') {
+      sec = '0' + sec
+    }
+    let newTask = this.createTask(value, min.length === 1 ? '0' + min : min, sec.length === 1 ? '0' + sec : sec)
     this.setState(({ data }) => {
       const newData = [newTask, ...data.slice(0)]
       return {
@@ -105,8 +113,9 @@ class TodoApp extends Component {
     })
   }
   render() {
-    const { filter, data } = this.state
+    const { filter } = this.state
     let visisbleElements = this.filterTask(filter)
+    console.log(this.state)
     return (
       <section className="todoapp">
         <Header onAddTask={this.addTask} />
