@@ -241,6 +241,7 @@ body {
 .todo-list li label .description {
   font-size: 13px;
   color: gray;
+  margin-left: 5px
 }
 
 .todo-list li label .title {
