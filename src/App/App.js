@@ -19,7 +19,7 @@ export default class TodoApp extends Component {
     window.localStorage.setItem('state', JSON.stringify(this.state))
   }
 
-  createTask(value, min, sec) {
+  createTask(value, min = 5, sec = 0) {
     return {
       id: Math.random() + 10,
       value,
