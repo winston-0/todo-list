@@ -240,7 +240,7 @@ body {
 .todo-list li .icon {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%)
+  transform: translateY(-50%);
   width: 30px;
   height: 40px;
   font-size: 34px;
