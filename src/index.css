@@ -247,7 +247,6 @@ body {
 }
 
 .todo-list li label .title {
-  word-break: break-all;
   display: block;
   line-height: 1.2;
   transition: color 0.4s;
