@@ -7,7 +7,11 @@ import '../index.css'
 
 export default class TodoApp extends Component {
   state = JSON.parse(window.localStorage.getItem('state')) || {
-    data: [this.createTask('finish education'), this.createTask('drink some coffe'), this.createTask('go touch some grass')],
+    data: [
+      this.createTask('finish education'),
+      this.createTask('drink some coffe'),
+      this.createTask('go touch some grass'),
+    ],
     filter: 'all',
   }
 
