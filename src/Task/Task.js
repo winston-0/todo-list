@@ -34,7 +34,7 @@ export default class Task extends Component {
   }
 
   render() {
-    const { value, isDone, onDeleteTask, onMarkDoneTask, whenCreated, onEdit, id, min, sec } = this.props
+    const { value, isDone, onDeleteTask, onMarkDoneTask, onSaveTime, whenCreated, onEdit, id, min, sec } = this.props
     const { checkboxStatus, editing, editingValue } = this.state
     return (
       <li className={isDone ? 'completed' : null || editing ? 'editing' : null}>
@@ -48,7 +48,7 @@ export default class Task extends Component {
           />
           <label>
             <span className="title">{value}</span>
-            <Timer min={min} sec={sec} />
+            <Timer id={id} onSaveTime={onSaveTime} min={min} sec={sec} />
             <span className="description">{formatDistanceToNow(parseISO(whenCreated))} ago</span>
           </label>
           <button onClick={this.editTask} className="icon icon-edit"></button>

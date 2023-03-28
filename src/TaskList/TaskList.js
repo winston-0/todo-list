@@ -2,7 +2,7 @@ import React from 'react'
 
 import Task from '../Task/Task'
 
-export default function TaskList({ data, onDeleteTask, onMarkDoneTask, onEdit }) {
+export default function TaskList({ data, onDeleteTask, onMarkDoneTask, onEdit, onSaveTime }) {
   let tasks = data.map((el) => {
     const { id, ...otherProps } = el
     return (
@@ -13,6 +13,7 @@ export default function TaskList({ data, onDeleteTask, onMarkDoneTask, onEdit })
         onDeleteTask={() => onDeleteTask(el.id)}
         onMarkDoneTask={() => onMarkDoneTask(el.id)}
         onEdit={onEdit}
+        onSaveTime={onSaveTime}
       />
     )
   })

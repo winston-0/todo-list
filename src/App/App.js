@@ -18,7 +18,15 @@ export default class TodoApp extends Component {
   componentDidUpdate() {
     window.localStorage.setItem('state', JSON.stringify(this.state))
   }
-
+  saveTime = (id, min, sec) => {
+    const {data} = this.state;
+    const indexOfItem = data.findIndex((el) => el.id === id);
+    const newItem = {...data[indexOfItem], min, sec};
+    const newData = [...data.slice(0, indexOfItem), newItem, ...data.slice(indexOfItem + 1)]
+    this.setState({
+      data: newData
+    })
+  }
   createTask(value, min = '05', sec = '00') {
     return {
       id: Math.random() + 10,
@@ -128,6 +136,7 @@ export default class TodoApp extends Component {
             data={visisbleElements}
             onDeleteTask={this.deleteTask}
             onMarkDoneTask={this.markDoneTask}
+            onSaveTime={this.saveTime}
           />
           <Footer
             deleteCompleted={this.clearAllCompleted}

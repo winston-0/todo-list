@@ -20,6 +20,12 @@ export default class Timer extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    const {onSaveData} = this.props;
+    const {seconds, minutes} = this.state
+    onSaveData(id, minutes, seconds);
+  }
+
   diffTime = () => {
     const { seconds, minutes } = this.state
     if (minutes === '00' && seconds === '01') {
