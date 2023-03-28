@@ -19,12 +19,12 @@ export default class TodoApp extends Component {
     window.localStorage.setItem('state', JSON.stringify(this.state))
   }
   saveTime = (id, min, sec) => {
-    const {data} = this.state;
-    const indexOfItem = data.findIndex((el) => el.id === id);
-    const newItem = {...data[indexOfItem], min, sec};
+    const { data } = this.state
+    const indexOfItem = data.findIndex((el) => el.id === id)
+    const newItem = { ...data[indexOfItem], min, sec }
     const newData = [...data.slice(0, indexOfItem), newItem, ...data.slice(indexOfItem + 1)]
     this.setState({
-      data: newData
+      data: newData,
     })
   }
   createTask(value, min = '05', sec = '00') {
@@ -126,7 +126,7 @@ export default class TodoApp extends Component {
   render() {
     const { filter } = this.state
     let visisbleElements = this.filterTask(filter)
-    console.log(this.state)
+    // console.log(this.state)
     return (
       <section className="todoapp">
         <Header onAddTask={this.addTask} />

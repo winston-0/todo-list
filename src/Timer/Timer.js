@@ -19,14 +19,20 @@ export default class Timer extends React.Component {
       return splitNumber.join('')
     }
   }
-
-  componentWillUnmount() {
-    const {onSaveData} = this.props;
-    const {seconds, minutes} = this.state
-    onSaveData(id, minutes, seconds);
+  componentDidUpdate(prevProps, prevState) {
+    const { seconds, minutes } = this.state
+    const { id, onSaveTime } = this.props
+    if (prevState.seconds !== seconds || prevState.minutes !== minutes) {
+      onSaveTime(id, minutes, seconds)
+    }
   }
-
+  componentWillUnmount() {
+    if (this.state.isRunning) {
+      clearInterval(this._idForTimer)
+    }
+  }
   diffTime = () => {
+    console.log(1)
     const { seconds, minutes } = this.state
     if (minutes === '00' && seconds === '01') {
       this.setState({
@@ -46,10 +52,9 @@ export default class Timer extends React.Component {
       })
     }
   }
+
   _idForTimer = null
-  //   componentDidMount() {
-  //     setInterval(this.diffTime, 1000)
-  //   }
+
   startTimer = () => {
     if (this.state.isRunning !== true) {
       this.setState({
