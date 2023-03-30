@@ -1,35 +1,22 @@
-import { React, Component } from 'react'
+import { React, useState, useEffect, useMemo } from 'react'
 
 import Header from '../Header/Header'
 import TaskList from '../TaskList/TaskList'
 import Footer from '../Footer/Footer'
 import '../index.css'
 
-export default class TodoApp extends Component {
-  state = JSON.parse(window.localStorage.getItem('state')) || {
-    data: [
-      this.createTask('finish education'),
-      this.createTask('drink some coffe'),
-      this.createTask('go touch some grass'),
-    ],
-    filter: 'all',
-  }
-
-  componentDidUpdate() {
-    window.localStorage.setItem('state', JSON.stringify(this.state))
-  }
-  saveTime = (id, min, sec) => {
-    const { data } = this.state
-    const indexOfItem = data.findIndex((el) => el.id === id)
-    const newItem = { ...data[indexOfItem], min, sec }
-    const newData = [...data.slice(0, indexOfItem), newItem, ...data.slice(indexOfItem + 1)]
-    this.setState({
-      data: newData,
-    })
-  }
-  createTask(value, min = '05', sec = '00') {
+export default function TodoApp() {
+  // state = JSON.parse(window.localStorage.getItem('state')) || {
+  //   data: [
+  //     this.createTask('finish education'),
+  //     this.createTask('drink some coffe'),
+  //     this.createTask('go touch some grass'),
+  //   ],
+  //   filter: 'all',
+  // }
+  const createTask = (value, min = '05', sec = '00') => {
     return {
-      id: Math.random() + 10,
+      id: Math.random() * 20,
       value,
       isImportant: false,
       isDone: false,
@@ -38,45 +25,68 @@ export default class TodoApp extends Component {
       sec,
     }
   }
-  deleteTask = (id) => {
-    this.setState(() => {
-      const { data } = this.state
-      const indexOfItem = data.findIndex((el) => el.id === id)
-      const newData = [...data.slice(0, indexOfItem), ...data.slice(indexOfItem + 1)]
-      return {
-        data: newData,
-      }
-    })
+
+  const initialDataCreate = useMemo(() => {
+    const initialData = [createTask('go walk'), createTask('finish kata'), createTask('drink coffe')]
+    return initialData
+  }, [])
+
+  const [data, setData] = useState(JSON.parse(localStorage.getItem('data')) || initialDataCreate)
+  const [filter, setFilter] = useState(JSON.parse(localStorage.getItem('filter')) || 'all')
+
+  useEffect(() => {
+    localStorage.setItem('data', JSON.stringify(data))
+  }, [data])
+
+  useEffect(() => {
+    localStorage.setItem('filter', JSON.stringify(filter))
+  }, [filter])
+
+  useEffect(() => {
+    console.log(1)
+    setData(JSON.parse(localStorage.getItem('data')))
+    setFilter(JSON.parse(localStorage.getItem('filter')))
+  }, [])
+
+  const saveTime = (id, min, sec) => {
+    const indexOfItem = data.findIndex((el) => el.id === id)
+    const newItem = { ...data[indexOfItem], min, sec }
+    const newData = [...data.slice(0, indexOfItem), newItem, ...data.slice(indexOfItem + 1)]
+    setData(newData)
   }
-  editTask = (value, id) => {
-    const { data } = this.state
+
+  const deleteTask = (id) => {
+    const indexOfItem = data.findIndex((el) => el.id === id)
+    const newData = [...data.slice(0, indexOfItem), ...data.slice(indexOfItem + 1)]
+    setData(newData)
+  }
+
+  const editTask = (value, id) => {
     const indexOfItem = data.findIndex((el) => el.id === id)
     const newItem = { ...data[indexOfItem], value: value }
     const newData = [...data.slice(0, indexOfItem), newItem, ...data.slice(indexOfItem + 1)]
-    this.setState({
-      data: newData,
-    })
+    setData(newData)
   }
 
-  markDoneTask = (id) => {
-    this.setState(({ data }) => {
-      const indexOfItem = data.findIndex((el) => el.id === id)
+  const markDoneTask = (id) => {
+    const indexOfItem = data.findIndex((el) => el.id === id)
+    setData((data) => {
       const newItem = {
         ...data[indexOfItem],
         isDone: !data[indexOfItem]['isDone'],
       }
       const newData = [...data.slice(0, indexOfItem), newItem, ...data.slice(indexOfItem + 1)]
-      return {
-        data: newData,
-      }
+      return newData
     })
   }
-  remainingTasks = () => {
-    const { data } = this.state
+
+  const remainingTasks = () => {
+    console.log(data)
     const completedTasks = data.filter((el) => el.isDone).length
     return data.length - completedTasks
   }
-  addTask = ({ value, min, sec }) => {
+
+  const addTask = ({ value, min, sec }) => {
     if (min === '') {
       min = '0' + min
     }
@@ -84,30 +94,17 @@ export default class TodoApp extends Component {
       sec = '0' + sec
     }
     let newTask = this.createTask(value, min.length === 1 ? '0' + min : min, sec.length === 1 ? '0' + sec : sec)
-    this.setState(({ data }) => {
+    setData((data) => {
       const newData = [newTask, ...data.slice(0)]
-      return {
-        data: newData,
-      }
+      return newData
     })
   }
-  FilterStatus = (status) => {
-    if (status === 'all') {
-      this.setState({
-        filter: 'all',
-      })
-    } else if (status === 'completed') {
-      this.setState({
-        filter: 'completed',
-      })
-    } else if (status === 'active') {
-      this.setState({
-        filter: 'active',
-      })
-    }
+
+  const filterStatus = (status) => {
+    setFilter(status)
   }
-  filterTask = (condition) => {
-    const { data } = this.state
+
+  const filterTask = (condition) => {
     if (condition === 'all') {
       return [...data]
     } else if (condition === 'completed') {
@@ -116,35 +113,26 @@ export default class TodoApp extends Component {
       return data.filter((el) => el.isDone === false)
     }
   }
-  clearAllCompleted = () => {
-    const { data } = this.state
+  const clearAllCompleted = () => {
     const newArr = data.filter((el) => !el.isDone)
-    this.setState({
-      data: newArr,
-    })
+    setData(newArr)
   }
-  render() {
-    const { filter } = this.state
-    let visisbleElements = this.filterTask(filter)
-    // console.log(this.state)
-    return (
-      <section className="todoapp">
-        <Header onAddTask={this.addTask} />
-        <section className="main">
-          <TaskList
-            onEdit={this.editTask}
-            data={visisbleElements}
-            onDeleteTask={this.deleteTask}
-            onMarkDoneTask={this.markDoneTask}
-            onSaveTime={this.saveTime}
-          />
-          <Footer
-            deleteCompleted={this.clearAllCompleted}
-            onFilter={this.FilterStatus}
-            remainingTasks={this.remainingTasks}
-          />
-        </section>
+
+  const visisbleElements = filterTask(filter)
+
+  return (
+    <section className="todoapp">
+      <Header onAddTask={addTask} />
+      <section className="main">
+        <TaskList
+          onEdit={editTask}
+          data={visisbleElements}
+          onDeleteTask={deleteTask}
+          onMarkDoneTask={markDoneTask}
+          onSaveTime={saveTime}
+        />
+        <Footer deleteCompleted={clearAllCompleted} onFilter={filterStatus} remainingTasks={remainingTasks} />
       </section>
-    )
-  }
+    </section>
+  )
 }
