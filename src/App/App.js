@@ -6,14 +6,6 @@ import Footer from '../Footer/Footer'
 import '../index.css'
 
 export default function TodoApp() {
-  // state = JSON.parse(window.localStorage.getItem('state')) || {
-  //   data: [
-  //     this.createTask('finish education'),
-  //     this.createTask('drink some coffe'),
-  //     this.createTask('go touch some grass'),
-  //   ],
-  //   filter: 'all',
-  // }
   const createTask = (value, min = '05', sec = '00') => {
     return {
       id: Math.random() * 20,
@@ -41,12 +33,6 @@ export default function TodoApp() {
   useEffect(() => {
     localStorage.setItem('filter', JSON.stringify(filter))
   }, [filter])
-
-  useEffect(() => {
-    console.log(1)
-    setData(JSON.parse(localStorage.getItem('data')))
-    setFilter(JSON.parse(localStorage.getItem('filter')))
-  }, [])
 
   const saveTime = (id, min, sec) => {
     const indexOfItem = data.findIndex((el) => el.id === id)
@@ -81,7 +67,6 @@ export default function TodoApp() {
   }
 
   const remainingTasks = () => {
-    console.log(data)
     const completedTasks = data.filter((el) => el.isDone).length
     return data.length - completedTasks
   }
