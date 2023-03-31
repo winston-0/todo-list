@@ -78,7 +78,7 @@ export default function TodoApp() {
     if (sec === '') {
       sec = '0' + sec
     }
-    let newTask = this.createTask(value, min.length === 1 ? '0' + min : min, sec.length === 1 ? '0' + sec : sec)
+    let newTask = createTask(value, min.length === 1 ? '0' + min : min, sec.length === 1 ? '0' + sec : sec)
     setData((data) => {
       const newData = [newTask, ...data.slice(0)]
       return newData

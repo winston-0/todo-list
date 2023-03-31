@@ -1,66 +1,42 @@
-import { React, Component } from 'react'
+import { React, useState } from 'react'
 
-export class NewTaskForm extends Component {
-  state = {
-    value: '',
-    min: '',
-    sec: '',
+export function NewTaskForm({ onAddTask }) {
+  const [value, setValue] = useState('')
+  const [min, setMin] = useState('')
+  const [sec, setSec] = useState('')
+
+  const changeValue = (e) => {
+    setValue(e.target.value)
   }
-  changeValue = (e) => {
-    this.setState({
-      value: e.target.value,
-    })
+  const changeSeconds = (e) => {
+    setSec(e.target.value)
   }
-  changeSeconds = (e) => {
-    const seconds = e.target.value
-    this.setState({
-      sec: seconds,
-    })
+  const changeMinutes = (e) => {
+    setMin(e.target.value)
   }
-  changeMinutes = (e) => {
-    const minutes = e.target.value
-    this.setState({
-      min: minutes,
-    })
-  }
-  render() {
-    const { value } = this.state
-    const { onAddTask } = this.props
-    return (
-      <form
-        className="new-todo-form"
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            onAddTask(this.state)
-            this.setState({
-              value: '',
-              min: '',
-              sec: '',
-            })
-          }
-        }}
-      >
-        <input
-          value={value}
-          onChange={this.changeValue}
-          type="text"
-          className="new-todo"
-          placeholder="What needs to be done?"
-          autoFocus
-        ></input>
-        <input
-          onChange={this.changeMinutes}
-          value={this.state.min}
-          className="new-todo-form__timer"
-          placeholder="min"
-        />
-        <input
-          value={this.state.sec}
-          onChange={this.changeSeconds}
-          className="new-todo-form__timer"
-          placeholder="sec"
-        />
-      </form>
-    )
-  }
+  const completeState = { value, min, sec }
+  return (
+    <form
+      className="new-todo-form"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          onAddTask(completeState)
+          setValue('')
+          setMin('')
+          setSec('')
+        }
+      }}
+    >
+      <input
+        value={value}
+        onChange={changeValue}
+        type="text"
+        className="new-todo"
+        placeholder="What needs to be done?"
+        autoFocus
+      ></input>
+      <input onChange={changeMinutes} value={min} className="new-todo-form__timer" placeholder="min" />
+      <input value={sec} onChange={changeSeconds} className="new-todo-form__timer" placeholder="sec" />
+    </form>
+  )
 }

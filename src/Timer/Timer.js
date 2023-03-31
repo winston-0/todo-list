@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
-export default class Timer extends React.Component {
-  state = {
-    isRunning: false,
-    seconds: this.props.sec,
-    minutes: this.props.min,
-  }
-  changeSeconds = (type) => {
+export default function Timer(props) {
+  const { sec, min, id, onSaveTime } = props
+
+  const [isRunning, setIsRunning] = useState(false)
+  const [seconds, setSeconds] = useState(sec)
+  const [minutes, setMinutes] = useState(min)
+
+  const changeSeconds = (type) => {
     let splitNumber = type.split('')
     let firstNumber = Number(splitNumber[0])
     let secondNumber = Number(splitNumber[1])
@@ -19,67 +20,45 @@ export default class Timer extends React.Component {
       return splitNumber.join('')
     }
   }
-  componentDidUpdate(prevProps, prevState) {
-    const { seconds, minutes } = this.state
-    const { id, onSaveTime } = this.props
-    if (prevState.seconds !== seconds || prevState.minutes !== minutes) {
-      onSaveTime(id, minutes, seconds)
+
+  useEffect(() => {
+    onSaveTime(id, minutes, seconds)
+  }, [seconds, minutes])
+
+  let timerId = useRef(null).current
+
+  useEffect(() => {
+    if (isRunning) {
+      timerId = setInterval(diffTime, 1000)
     }
-  }
-  componentWillUnmount() {
-    if (this.state.isRunning) {
-      clearInterval(this._idForTimer)
-    }
-  }
-  diffTime = () => {
-    console.log(1)
-    const { seconds, minutes } = this.state
+    return () => clearInterval(timerId)
+  }, [isRunning])
+
+  useEffect(() => {
+    return () => clearInterval(timerId)
+  }, [])
+
+  const diffTime = () => {
     if (minutes === '00' && seconds === '01') {
-      this.setState({
-        seconds: '00',
-      })
-      clearInterval(this._idForTimer)
+      setSeconds('00')
+      clearInterval(timerId)
       return
     }
     if (seconds !== '00') {
-      this.setState({
-        seconds: this.changeSeconds(seconds),
-      })
+      setSeconds(changeSeconds(seconds))
     } else {
-      this.setState({
-        seconds: '59',
-        minutes: minutes !== '01' ? this.changeSeconds(minutes) : '00',
-      })
+      setSeconds('59')
+      setMinutes(minutes !== '01' ? changeSeconds(minutes) : '00')
     }
   }
 
-  _idForTimer = null
-
-  startTimer = () => {
-    if (this.state.isRunning !== true) {
-      this.setState({
-        isRunning: true,
-      })
-      this._idForTimer = setInterval(this.diffTime, 1000)
-    }
-  }
-  pauseTimer = () => {
-    this.setState({
-      isRunning: false,
-    })
-    clearInterval(this._idForTimer)
-  }
-
-  render() {
-    const { seconds, minutes } = this.state
-    return (
-      <span className="description">
-        <button onClick={this.startTimer} className="icon icon-play"></button>
-        <button onClick={this.pauseTimer} className="icon icon-pause"></button>
-        <span className="timerCount">
-          {minutes}:{seconds}
-        </span>
+  return (
+    <span className="description">
+      <button onClick={setIsRunning(true)} className="icon icon-play"></button>
+      <button onClick={setIsRunning(false)} className="icon icon-pause"></button>
+      <span className="timerCount">
+        {minutes}:{seconds}
       </span>
-    )
-  }
+    </span>
+  )
 }
