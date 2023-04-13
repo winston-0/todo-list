@@ -7,7 +7,7 @@ export default function Timer(props) {
   const [seconds, setSeconds] = useState(sec)
   const [minutes, setMinutes] = useState(min)
 
-  const changeSeconds = (type) => {
+  const changeTime = (type) => {
     let splitNumber = type.split('')
     let firstNumber = Number(splitNumber[0])
     let secondNumber = Number(splitNumber[1])
@@ -25,37 +25,37 @@ export default function Timer(props) {
     onSaveTime(id, minutes, seconds)
   }, [seconds, minutes])
 
-  let timerId = useRef(null).current
+  let timerId = useRef(null)
 
   useEffect(() => {
     if (isRunning) {
-      timerId = setInterval(diffTime, 1000)
+      timerId.current = setInterval(diffTime, 1000)
     }
-    return () => clearInterval(timerId)
-  }, [isRunning])
+    return () => clearInterval(timerId.current)
+  }, [isRunning, seconds, minutes])
 
   useEffect(() => {
-    return () => clearInterval(timerId)
+    return () => clearInterval(timerId.current)
   }, [])
 
   const diffTime = () => {
     if (minutes === '00' && seconds === '01') {
       setSeconds('00')
-      clearInterval(timerId)
+      clearInterval(timerId.current)
       return
     }
     if (seconds !== '00') {
-      setSeconds(changeSeconds(seconds))
+      setSeconds(changeTime(seconds))
     } else {
       setSeconds('59')
-      setMinutes(minutes !== '01' ? changeSeconds(minutes) : '00')
+      setMinutes(minutes !== '01' ? changeTime(minutes) : '00')
     }
   }
 
   return (
     <span className="description">
-      <button onClick={setIsRunning(true)} className="icon icon-play"></button>
-      <button onClick={setIsRunning(false)} className="icon icon-pause"></button>
+      <button onClick={() => setIsRunning(true)} className="icon icon-play"></button>
+      <button onClick={() => setIsRunning(false)} className="icon icon-pause"></button>
       <span className="timerCount">
         {minutes}:{seconds}
       </span>
